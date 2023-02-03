@@ -7,9 +7,17 @@
 ## 細節:
 1.. SolutionTransient, SolutionScoped, SolutionSingleton 都沒有看到物件釋放的訊息, 所以不確定是否有執行 ~SayHello() 這個解構子.
 
+![Transient](https://github.com/jasper-lai/netcoredistarter/blob/master/pictures/transient.png?raw=true)
+
+![Scoped](https://github.com/jasper-lai/netcoredistarter/blob/master/pictures/scoped.png?raw=true)
+
+![Singleton](https://github.com/jasper-lai/netcoredistarter/blob/master/pictures/singleton.png?raw=true)
+
 2.. 後來, 把 1.. 的程式合併到一支, 改用 TestTransient(), TestScoped(), TestSingleton() 方法作測試, 結果發現:  
 (1) Transient 建立的物件, 會在 TestScoped() 執行的時候, 出現訊息.  
 (2) Scoped 建立的物件, 會在 TestSingleton() 執行的時候, 出現訊息.  
 
-3.. 要如何才能正確看到解構子執行的訊息?
+![All_In_One](https://github.com/jasper-lai/netcoredistarter/blob/master/pictures/all_in_one.png?raw=true)
+
+**3.. 要如何才能正確看到解構子執行的訊息?**
 
