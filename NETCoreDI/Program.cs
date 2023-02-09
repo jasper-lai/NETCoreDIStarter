@@ -117,9 +117,7 @@ namespace NETCoreDI
             // 1.. 因為是 AddScoped, 建立不同的 scope 的狀況下, 會有不同的物件實體
             // 2.. sayHello1, sayHello2 被設成 null, 因為還在 scope 中, 所以不會被釋放
             // 3.. sayHello1_1, sayHello2_1 被設成 null, 因為還在 scope 中, 所以不會被釋放;
-            //     但此時因為前一個 scope 已經結束, 所以 sayHello1 (與 sayHello2 相同 instance), 
-            //     應該要被解構掉.
-            //     --> 但實測結果是完全沒有被釋放, 不論 sayHello3.Hi("M3 - Will"); 是否有被註解掉
+            //     --> 前一個 scope 並未結束, 故可以呼叫 sayHello3.Hi("M3 - Jasper"); 
             // -----------------------------------------------------
 
             #region 使用兩個 Scope
@@ -156,7 +154,7 @@ namespace NETCoreDI
             //
             // 若將底下的程式碼註解起來(在 AddScoped 模式)，則 
             // sayHello1, sayHello2 指向到 ConsoleMessage 會被釋放掉
-            sayHello3.Hi("M3 - Will");
+            sayHello3.Hi("M3 - Jasper");
 
             #endregion
 
