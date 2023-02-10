@@ -46,6 +46,8 @@ namespace NETCoreDI
             TestScoped();
             Console.WriteLine("====== TestSingleton ======");
             TestSingleton();
+            Console.WriteLine("====== TestDummy ======");
+            TestDummy();
 
             //Console.WriteLine("Press any key for continuing...");
             //Console.ReadKey();
@@ -64,6 +66,7 @@ namespace NETCoreDI
             serviceCollection.AddTransient<ISayHello, SayHello>();
             serviceProvider1 = serviceCollection.BuildServiceProvider();
 
+
             #region 暫時性 Transient
 
             sayHello1 = serviceProvider1.GetService<ISayHello>();
@@ -76,6 +79,9 @@ namespace NETCoreDI
             GC.Collect(2);
             Thread.Sleep(1000);
             sayHello3.Hi("M3 - Will");
+
+            Console.WriteLine($"DI Container Generation: {GC.GetGeneration(serviceProvider1)}");
+            Console.WriteLine($"object Generation: {GC.GetGeneration(sayHello3)}");
 
             #endregion
         }
@@ -136,6 +142,9 @@ namespace NETCoreDI
             sayHello3 = serviceProvider2.GetService<ISayHello>();
             sayHello3.Hi("M3 - Will");
 
+            Console.WriteLine($"DI Container II Generation: {GC.GetGeneration(serviceProvider2)}");
+            Console.WriteLine($"object Generation (sayHello3): {GC.GetGeneration(sayHello3)}");
+
             // ----------------- scope3 ------------------------
             serviceScope3 = serviceProvider1.CreateScope();
             serviceProvider3 = serviceScope3.ServiceProvider;
@@ -149,6 +158,9 @@ namespace NETCoreDI
             Thread.Sleep(1000);
             sayHello3_1 = serviceProvider3.GetService<ISayHello>();
             sayHello3_1.Hi("M3_1 - Ada Chan");
+
+            Console.WriteLine($"DI Container III Generation: {GC.GetGeneration(serviceProvider3)}");
+            Console.WriteLine($"object Generation (sayHello3_1): {GC.GetGeneration(sayHello3_1)}");
 
             // (jasper) 箇要: 這裡用的是 scope2 的物件 ....
             //
@@ -201,6 +213,8 @@ namespace NETCoreDI
             Thread.Sleep(1000);
             sayHello3 = serviceProvider2.GetService<ISayHello>();
             sayHello3.Hi("M3 - Will");
+            Console.WriteLine($"DI Container II Generation: {GC.GetGeneration(serviceProvider2)}");
+            Console.WriteLine($"object Generation (sayHello3): {GC.GetGeneration(sayHello3)}");
 
             serviceScope3 = serviceProvider1.CreateScope();
             serviceProvider3 = serviceScope3.ServiceProvider;
@@ -214,11 +228,31 @@ namespace NETCoreDI
             Thread.Sleep(1000);
             sayHello3_1 = serviceProvider3.GetService<ISayHello>();
             sayHello3_1.Hi("M3_1 - Ada Chan");
+
+            Console.WriteLine($"DI Container III Generation: {GC.GetGeneration(serviceProvider3)}");
+            Console.WriteLine($"object Generation (sayHello3_1): {GC.GetGeneration(sayHello3_1)}");
+
             // 若將底下的程式碼註解起來(在 AddScoped 模式)，則 
             // sayHello1, sayHello2 指向到 ConsoleMessage 會被釋放掉
             sayHello3.Hi("M3 - Will");
 
             #endregion
+        }
+
+        private static void TestDummy()
+        {
+            // -----------------------------------------------------
+            // (jasper)
+            // 1.. 看來會在 GC.Collect(2) 的空檔, 才會回收前述 Singleton 的物件
+            // -----------------------------------------------------
+            Console.WriteLine("Hello, World !");
+            Console.WriteLine("Hello, World !");
+            Console.WriteLine("Hello, World !");
+            GC.Collect(2);
+            Thread.Sleep(1000);
+            Console.WriteLine("Hello, Jasper !");
+            Console.WriteLine("Hello, Jasper !");
+            Console.WriteLine("Hello, Jasper !");
         }
     }
 }
