@@ -1,8 +1,9 @@
 ## 目的:
 用以驗證 .NET Core 3.1 (非 ASP.NET Core 3.1) 在 Transient, Scoped, Singleton 下, .NET Core DI 生成的物件實體是否相同, 及其釋放時機.
 
-## 問題:
+## 問題: (已經暫時 Work Around)
 物件解構子執行的時間似乎不對.
+Work Around 的方式, 請查看 細節.3 的描述.
 
 ## 預期行為:  (不知描述是否正確?)
 
@@ -32,5 +33,11 @@
 
 ![All_In_One](https://github.com/jasper-lai/netcoredistarter/blob/master/pictures/all_in_one.png?raw=true)
 
-**3.. 要如何才能正確看到解構子執行的訊息?**
+**3.. 要如何才能正確看到解構子執行的訊息? (Work Around)** 
 
+經實測, 看來要在前一個函式結束後, 要再作一次 GC.Collect(), 才會真的回收.  
+讓資源釋放的訊息有空檔可以輸出至螢幕的方式: (可以一併參考最後一次 commit 的程式段)    
+* (1) 同步呼叫 MyDelay();   <== 是用 Task.Delay(2000) 去實作, 不會卡現行的 UI  
+* (2) 非同步呼叫 DelayAsync() <== 是用 Task.Delay(2000) 去實作, 不會卡現行的 UI  
+* (3) Thread.Sleep(2000);  <== 依 Google 查到的資料, 會卡現行的 UI (即 main thread)  
+![All_In_One_Work_Around](https://github.com/jasper-lai/netcoredistarter/blob/master/pictures/all_in_one_work_around.png?raw=true)
