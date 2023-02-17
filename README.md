@@ -39,5 +39,6 @@ Work Around 的方式, 請查看 細節.3 的描述.
 讓資源釋放的訊息有空檔可以輸出至螢幕的方式: (可以一併參考最後一次 commit 的程式段)    
 * (1) 同步呼叫 MyDelay();   <== 是用 Task.Delay(2000) 去實作, 不會卡現行的 UI  
 * (2) 非同步呼叫 DelayAsync() <== 是用 Task.Delay(2000) 去實作, 不會卡現行的 UI  
-* (3) Thread.Sleep(2000);  <== 依 Google 查到的資料, 會卡現行的 UI (即 main thread)  
+* (3) Thread.Sleep(2000);  <== 依 Google 查到的資料, 會卡現行的 UI (即 main thread)    
+
 ![All_In_One_Work_Around](https://github.com/jasper-lai/netcoredistarter/blob/master/pictures/all_in_one_work_around.png?raw=true)
